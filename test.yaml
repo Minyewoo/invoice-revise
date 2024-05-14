@@ -15,7 +15,7 @@ types:
   # Target column (last row)
   "total":
     label: "Стоимость с налогом - всего"
-  # Addtitional "dummy" column to limit 'total' column width
+  # Addtitional "dummy" column to limit 'total' column width and match last row of column
   "total_end":
     label: "-"
 
