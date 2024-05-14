@@ -15,4 +15,5 @@ types:
   "total":
     label: "Стоимость товаров (всего)"
 
-filter: 'total =~ /[+-]?([\s ]?([0-9]*[,.])?[0-9]+)+/'
+# Match number with fractional part
+filter: 'total =~ /[+-]?([0-9]+[\s\xa0]?)+[,.]?[0-9]+/'
