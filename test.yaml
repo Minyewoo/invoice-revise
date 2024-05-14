@@ -14,7 +14,7 @@ cols:
 types:
   # Target column (last row)
   "total":
-    label: "Стоимость товаров (всего)"
+    label: "Стоимость с налогом - всего"
   # Addtitional "dummy" column to limit 'total' column width
   "total_end":
     label: "-"
