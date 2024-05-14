@@ -19,5 +19,5 @@ types:
   "total_end":
     label: "-"
 
-# Match number with fractional part and ampty cells on right
+# Match number with fractional part and empty cells on right
 filter: 'total =~ /[+-]?([0-9]+[\s\xa0]?)+[,.]?[0-9]+/ and total_end =~ /^$/'
