@@ -1,0 +1,18 @@
+
+# All measurements are in points. 1 point = 1/72 of an inch.
+# x-coordinates are from the left edge of the page.
+# y-coordinates are from the top edge of the page.
+
+# Use the built-in pdfbox extractor
+extractor: "pdf.pdfbox"
+
+
+# Define the columns, based on the x-coordinate where the column starts:
+cols:
+  "total": 550
+
+types:
+  "total":
+    label: "Стоимость товаров (всего)"
+
+filter: 'total =~ /[+-]?([\s ]?([0-9]*[,.])?[0-9]+)+/'

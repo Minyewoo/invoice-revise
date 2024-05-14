@@ -1,0 +1,24 @@
+#!/bin/sh
+helpFunction()
+{
+   echo ""
+   echo "Usage: $0 -c config.yaml -i input.pdf -o output.csv"
+   echo -e "\t-c Yaml file with config for textricator"
+   echo -e "\t-i Pdf file to parse data"
+   echo -e "\t-o Csv file to write parsed result"
+   exit 1
+}
+
+while getopts "c:i:o:" opt
+do
+   case "$opt" in
+      c ) configYaml="$OPTARG" ;;
+      i ) inputPdf="$OPTARG" ;;
+      o ) outputCsv="$OPTARG" ;;
+      ? ) helpFunction ;;
+   esac
+done
+
+ocrmypdf -l rus --rotate-pages --deskew --jobs 10 --output-type pdfa "$inputPdf" tmp_ocr.pdf
+./textricator table --config=$configYaml tmp_ocr.pdf $outputCsv
+rm -f tmp_ocr.pdf
