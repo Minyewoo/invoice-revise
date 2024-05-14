@@ -1,4 +1,3 @@
-
 # All measurements are in points. 1 point = 1/72 of an inch.
 # x-coordinates are from the left edge of the page.
 # y-coordinates are from the top edge of the page.
@@ -10,9 +9,17 @@ extractor: "pdf.pdfbox"
 # Define the columns, based on the x-coordinate where the column starts:
 cols:
   "total": 550
+  "total_end": 610
 
 types:
+  # Target column (last row)
   "total":
-    label: "Стоимость товаров (всего)"
+    label: "Стоимость с налогом - всего"
+  # Addtitional "dummy" column to limit 'total' column width and match last row of column
+  "total_end":
+    label: "-"
 
-filter: 'total =~ /[+-]?([\s ]?([0-9]*[,.])?[0-9]+)+/'
+# Match number with fractional part
+filter: 'total =~ /[+-]?([0-9]+[\s\xa0]?)+[,.]?[0-9]+/'
+# Match empty string (cells on the right must be empty)
+filter: 'total_end =~ /^$/'
