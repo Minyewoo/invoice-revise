@@ -46,7 +46,7 @@ states:
         nextState: idlabel
       -
         condition: any
-        nextState: end
+        nextState: cringe_text
 
   idlabel:
     startRecord: true
@@ -55,6 +55,9 @@ states:
       -
         condition: id
         nextState: invoice
+      -
+        condition: any
+        nextState: cringe_text
 
   invoice:
     include: true
@@ -62,6 +65,9 @@ states:
       -
         condition: datelabel
         nextState: datelabel
+      -
+        condition: any
+        nextState: cringe_text
 
   datelabel:
     include: false
@@ -69,6 +75,28 @@ states:
       -
         condition: date
         nextState: date
+      -
+        condition: any
+        nextState: cringe_text
+
+  cringe_text:
+    include: false
+    transitions:
+      -
+        condition: idlabel
+        nextState: idlabel
+      -
+        condition: id
+        nextState: invoice
+      -
+        condition: datelabel
+        nextState: datelabel
+      -
+        condition: date
+        nextState: date
+      -
+        condition: any
+        nextState: cringe_text
 
   date:
     include: true
@@ -82,15 +110,12 @@ states:
     include: false
     transitions:
       -
-        condition: idlabel
-        nextState: idlabel
-      -
         # By using an always-true condition such as 'any', we can loop this state until the document has been completely gone through.
         condition: any
         nextState: end
 
 conditions:
-  idlabel: 'text =~ /[\s\xa0]*(Счет-фактура[\s\xa0].*No)/'
+  idlabel: 'text =~ /[\s\xa0]*(Счет-фактура)[\s\xa0]*/'
   id: 'text =~ /[\s\xa0]*([A-ZА-Я-]*[0-9].*)[\s\xa0]*/'
   datelabel: 'text =~ /[\s\xa0]*от[\s\xa0]*/'
   date: 'text =~ /[\s\xa0]*([0-9].?[\s\xa0].*[а-я].*[\s\xa0].*[0-9]{4})[\s\xa0]*/'
