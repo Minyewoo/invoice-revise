@@ -24,6 +24,6 @@ do
 done
 
 ocrmypdf -l rus --rotate-pages --deskew --jobs 10 --output-type pdfa "$inputPdf" tmp_ocr.pdf
-./textricator table --config=$tableConfigYaml tmp_ocr.pdf $tableCsv
-./textricator form --config=$formConfigYaml tmp_ocr.pdf $formCsv
+./textricator --debug table --config=$tableConfigYaml tmp_ocr.pdf $tableCsv >table.log 2>&1
+./textricator --debug form --config=$formConfigYaml tmp_ocr.pdf $formCsv >form.log 2>&1
 rm -f tmp_ocr.pdf

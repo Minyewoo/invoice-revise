@@ -2,3 +2,4 @@ lib/
 textricator
 *.pdf
 *.csv
+*.log
