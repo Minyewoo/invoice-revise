@@ -4,12 +4,12 @@ extractor: "pdf.pdfbox"
 # All measurements are in points. 1 point = 1/72 of an inch.
 # x-coordinates are from the left edge of the page.
 # y-coordinates are from the top edge of the page.
-header:
-    # ignore anything less than this many points from the top, default and per-page
-  default: 5
-footer:
-    # ignore anything more than this many points from the top, default and per-page
-  default: 5
+# header:
+#     # ignore anything less than this many points from the top, default and per-page
+#   default: 5
+# footer:
+#     # ignore anything more than this many points from the top, default and per-page
+#   default: 5
 
 # Text segments are generally parsed in order, top to bottom, left to right.
 # If two text segments have y-coordinates within this many points, consider them on the same line,
@@ -44,6 +44,9 @@ states:
       -
         condition: idlabel
         nextState: idlabel
+      -
+        condition: any
+        nextState: end
 
   idlabel:
     startRecord: true
@@ -78,6 +81,9 @@ states:
     # We reached a point in the document where all the useful information is gone, but we still have text to go.
     include: false
     transitions:
+      -
+        condition: idlabel
+        nextState: idlabel
       -
         # By using an always-true condition such as 'any', we can loop this state until the document has been completely gone through.
         condition: any
