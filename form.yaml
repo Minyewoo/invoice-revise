@@ -1,0 +1,93 @@
+# Use the built-in pdfbox parser
+extractor: "pdf.pdfbox"
+
+# All measurements are in points. 1 point = 1/72 of an inch.
+# x-coordinates are from the left edge of the page.
+# y-coordinates are from the top edge of the page.
+header:
+    # ignore anything less than this many points from the top, default and per-page
+  default: 5
+footer:
+    # ignore anything more than this many points from the top, default and per-page
+  default: 5
+
+# Text segments are generally parsed in order, top to bottom, left to right.
+# If two text segments have y-coordinates within this many points, consider them on the same line,
+# and process the one further left first, even if it is 0.4pt lower on the page.
+maxRowDistance: 2
+
+# Define the output data record.
+# Since the main record type we're collecting information on is our employees,
+# we'll have that be the root type for our harvested information.
+rootRecordType: invoice
+recordTypes:
+  invoice:
+    label: "invoice" # Labels are used when nested recordTypes come into play, like this document.
+    valueTypes:
+      # Not sure what to name a valueType? Just make something up!
+      - invoice
+      - date
+
+valueTypes:
+  invoice:
+    label: "Invoice ID"
+  date:
+    label: "Invoice date"
+
+# Now we define the finite-state machine
+# Let's name the state that our machine starts off with:
+initialState: "INIT"
+
+states:
+  INIT:
+    transitions:
+      -
+        condition: idlabel
+        nextState: idlabel
+
+  idlabel:
+    startRecord: true
+    include: false
+    transitions:
+      -
+        condition: id
+        nextState: invoice
+
+  invoice:
+    include: true
+    transitions:
+      -
+        condition: datelabel
+        nextState: datelabel
+
+  datelabel:
+    include: false
+    transitions:
+      -
+        condition: date
+        nextState: date
+
+  date:
+    include: true
+    transitions:
+      -
+        condition: any
+        nextState: end
+
+  end:
+    # We reached a point in the document where all the useful information is gone, but we still have text to go.
+    include: false
+    transitions:
+      -
+        # By using an always-true condition such as 'any', we can loop this state until the document has been completely gone through.
+        condition: any
+        nextState: end
+
+conditions:
+  idlabel: 'text =~ /[\s\xa0]*(Счет-фактура[\s\xa0].*No)/'
+  id: 'text =~ /[\s\xa0]*([A-ZА-Я-]*[0-9].*)[\s\xa0]*/'
+  datelabel: 'text =~ /[\s\xa0]*от[\s\xa0]*/'
+  date: 'text =~ /[\s\xa0]*([0-9].?[\s\xa0].*[а-я].*[\s\xa0].*[0-9]{4})[\s\xa0]*/'
+
+  # Need a condition that is always true? "1=1" does that for you.
+  any: "1 = 1"

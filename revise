@@ -2,23 +2,28 @@
 helpFunction()
 {
    echo ""
-   echo "Usage: $0 -c config.yaml -i input.pdf -o output.csv"
-   echo -e "\t-c Yaml file with config for textricator"
+   echo "Usage: $0 -t table.yaml -f form.yaml -i input.pdf -o table.csv -p form.csv"
+   echo -e "\t-t Yaml file with config for textricator table mode"
+   echo -e "\t-f Yaml file with config for textricator form mode"
    echo -e "\t-i Pdf file to parse data"
-   echo -e "\t-o Csv file to write parsed result"
+   echo -e "\t-o Csv file to write parsed table result"
+   echo -e "\t-p Csv file to write parsed form result"
    exit 1
 }
 
-while getopts "c:i:o:" opt
+while getopts "t:f:i:o:p:" opt
 do
    case "$opt" in
-      c ) configYaml="$OPTARG" ;;
+      t ) tableConfigYaml="$OPTARG" ;;
+      f ) formConfigYaml="$OPTARG" ;;
       i ) inputPdf="$OPTARG" ;;
-      o ) outputCsv="$OPTARG" ;;
+      o ) tableCsv="$OPTARG" ;;
+      p ) formCsv="$OPTARG" ;;
       ? ) helpFunction ;;
    esac
 done
 
 ocrmypdf -l rus --rotate-pages --deskew --jobs 10 --output-type pdfa "$inputPdf" tmp_ocr.pdf
-./textricator table --config=$configYaml tmp_ocr.pdf $outputCsv
+./textricator table --config=$tableConfigYaml tmp_ocr.pdf $tableCsv
+./textricator form --config=$formConfigYaml tmp_ocr.pdf $formCsv
 rm -f tmp_ocr.pdf
